@@ -1,0 +1,46 @@
+import marcas.*
+import jarras.*
+import personas.*
+
+describe "Parte 1" {
+	const hofbrau = new CervezaRubia()
+	const jarra1 = new Jarra()
+	const jarra2 = new Jarra()
+	const persona = new Aleman()
+	
+	fixture {
+		hofbrau.lupulo(2)
+		hofbrau.precio(110)
+		hofbrau.pais("Alemania")
+		hofbrau.graduacion(0.8)
+		
+		jarra1.capacidad(0.5)
+		jarra1.marca(hofbrau)
+		
+		jarra2.capacidad(1.5)
+		jarra2.marca(hofbrau)
+		
+		persona.peso(50)
+		persona.jarras([jarra1, jarra2])
+		persona.nivelAguante(20)
+		persona.marcas([hofbrau])
+	}
+	
+	test "contenido de alcohol" {
+		assert.equals(0.4, jarra1.contenidoAlcohol())
+		assert.equals(1.2, jarra2.contenidoAlcohol())
+	}
+	
+	test "total de alcohol" {
+		assert.equals(1.6, persona.totalAlcohol())
+	}
+	
+	test "persona ebria" {
+		assert.that(persona.estaEbria())
+	}
+	
+	test "le gusta cerveza" {
+		assert.that(persona.leGusta(hofbrau))
+	}
+	
+}

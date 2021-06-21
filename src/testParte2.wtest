@@ -1,0 +1,84 @@
+import marcas.*
+import jarras.*
+import personas.*
+import carpas.*
+
+describe "Parte 2" {
+	const hofbrau = new CervezaRubia()
+	const jarra1 = new Jarra()
+	const jarra2 = new Jarra()
+	const persona1 = new Aleman()
+	const persona2 = new Belga()
+	const carpa = new CarpaCervecera()
+	
+	fixture {
+		hofbrau.lupulo(2)
+		hofbrau.precio(110)
+		hofbrau.pais("Alemania")
+		hofbrau.graduacion(0.8)
+		
+		jarra1.capacidad(0.5)
+		jarra1.marca(hofbrau)
+		
+		jarra2.capacidad(1.5)
+		jarra2.marca(hofbrau)
+		
+		persona1.peso(50)
+		persona1.jarras([jarra1, jarra2])
+		persona1.nivelAguante(200)
+		persona1.marcas([hofbrau])
+		
+		persona2.peso(85)
+		persona2.jarras([jarra1])
+		persona2.nivelAguante(20)
+		persona2.marcas([hofbrau])
+		persona2.escuchaTradicional(false)
+		
+		carpa.limiteAdmision(10)
+		carpa.jarras([jarra1, jarra2])
+		carpa.marca(hofbrau)
+		carpa.recargo(carpa.recargoFijo())
+	}
+	
+	test "quiere entrar" {
+		assert.that(persona1.quiereEntrar(carpa))
+		assert.notThat(persona2.quiereEntrar(carpa))
+	}
+	
+	test "deja ingresar" {
+		assert.that(carpa.dejaIngresar(persona1))
+		assert.notThat(carpa.dejaIngresar(persona2))
+	}
+	
+	test "puede entrar" {
+		assert.that(persona1.puedeEntrar(carpa))
+		assert.notThat(persona2.puedeEntrar(carpa))
+	}
+	
+	test "hacer que entre" {
+		carpa.ingresar(persona1)
+		
+		assert.equals(carpa.personas(), [persona1])
+	}
+	
+	test "hacer servir jarra" {
+		carpa.ingresar(persona1)
+		carpa.servirJarraConCapacidadA(2, persona1)
+		
+		assert.equals(persona1.jarras().size(), 3)
+	}
+	
+	test "ebrios empedernidos" {
+		carpa.ingresar(persona1)
+				
+		assert.equals(carpa.ebriosEmpedernidos(), 0 )
+	}
+	
+	test "es patriota" {
+		assert.that(persona1.esPatriota())
+		assert.notThat(persona2.esPatriota())
+	}
+
+	
+	
+}
